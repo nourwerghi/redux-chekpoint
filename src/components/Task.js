@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { toggleTask, editTask } from '../Redux/actions';
-
+import { toggleTask, editTask, deleteTask } from '../Redux/actions';
 
 const Task = ({ task }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -13,6 +12,10 @@ const Task = ({ task }) => {
       dispatch(editTask(task.id, editedDescription));
       setIsEditing(false);
     }
+  };
+
+  const handleDelete = () => {
+    dispatch(deleteTask(task.id));
   };
 
   return (
@@ -39,6 +42,7 @@ const Task = ({ task }) => {
             {task.description}
           </span>
           <button onClick={() => setIsEditing(true)}>Edit</button>
+          <button onClick={handleDelete} className="delete-btn">Delete</button>
         </div>
       )}
     </div>

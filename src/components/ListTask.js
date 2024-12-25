@@ -4,7 +4,7 @@ import Task from './Task';
 import { filterTasks } from '../Redux/actions';
 
 const ListTask = () => {
-  const [filter, setFilter] = useState('ALL');
+  const [filter, setFilter] = useState('all');
   const dispatch = useDispatch();
   const tasks = useSelector(state => state.tasks);
 
@@ -13,45 +13,38 @@ const ListTask = () => {
     dispatch(filterTasks(newFilter));
   };
 
-  const filteredTasks = tasks.filter(task => {
-    switch (filter) {
-      case 'DONE':
-        return task.isDone;
-      case 'NOT_DONE':
-        return !task.isDone;
-      default:
-        return true;
-    }
-  });
-
   return (
     <div className="task-list">
       <div className="filter-buttons">
         <button 
-          onClick={() => handleFilterChange('ALL')}
-          className={filter === 'ALL' ? 'active' : ''}
+          onClick={() => handleFilterChange('all')}
+          className={filter === 'all' ? 'active' : ''}
         >
           All ({tasks.length})
         </button>
         <button 
-          onClick={() => handleFilterChange('DONE')}
-          className={filter === 'DONE' ? 'active' : ''}
+          onClick={() => handleFilterChange('done')}
+          className={filter === 'done' ? 'active' : ''}
         >
           Done ({tasks.filter(t => t.isDone).length})
         </button>
         <button 
-          onClick={() => handleFilterChange('NOT_DONE')}
-          className={filter === 'NOT_DONE' ? 'active' : ''}
+          onClick={() => handleFilterChange('undone')}
+          className={filter === 'undone' ? 'active' : ''}
         >
           Not Done ({tasks.filter(t => !t.isDone).length})
         </button>
       </div>
       
       <div className="tasks-container">
-        {filteredTasks.length === 0 ? (
+        {tasks.length === 0 ? (
           <p className="no-tasks">No tasks found</p>
         ) : (
-          filteredTasks.map(task => (
+          tasks.filter(task => {
+            if (filter === 'done') return task.isDone;
+            if (filter === 'undone') return !task.isDone;
+            return true;
+          }).map(task => (
             <Task key={task.id} task={task} />
           ))
         )}
